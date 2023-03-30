@@ -84,4 +84,4 @@ export const countryFilterData: CountryValues[] = [
     },
   ]
 
-  export const PAGE_SIZE_OPTIONS = ['50', '100', '200', '300'];
+  export const PAGE_SIZE_OPTIONS = ['200', '400', '500'];

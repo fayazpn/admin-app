@@ -4,7 +4,7 @@ export const initialState: TableState = {
   searchText: "",
   searchedColumn: "",
   currentPage: 1,
-  pageSize: 50,
+  pageSize: 200,
 };
 
 export function tableReducer(state: TableState, action: Action): TableState {
