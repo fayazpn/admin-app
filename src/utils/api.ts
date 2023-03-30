@@ -13,7 +13,9 @@ export async function fetchUsers( page = 1, result = 25 ) {
   return apiResponse;
 }
 
+// Make custom hook for fetching data
 const useFetchData = (page: number, results: number) => {
+  // Disable cache as random user API returns invalidates cache every time
   return useQuery(["fetchData", page, results], () => fetchUsers(page, results),{
     cacheTime: 0,
     staleTime: Infinity,

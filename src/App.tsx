@@ -54,7 +54,7 @@ const App: React.FC = () => {
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>
-            Ant Design ©2023 Created by Ant UED
+            Admin App  Created by Fayaz P N
           </Footer>
         </Layout>
       </ConfigProvider>
