@@ -62,7 +62,7 @@ const AdminTable: React.FC = () => {
             Search
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
+            onClick={() => clearFilters && handleReset(clearFilters, confirm)}
             size="small"
             style={{ width: 90 }}
           >
@@ -228,8 +228,10 @@ const AdminTable: React.FC = () => {
   };
 
   // Filter reset handler
-  const handleReset = (clearFilters: () => void) => {
+  const handleReset = (clearFilters: () => void, confirm: () => void) => {
     clearFilters();
+    confirm();
+    dispatch({ type: "SET_SEARCH_TEXT", payload: "" });
     dispatch({ type: "SET_SEARCHED_COLUMN", payload: "" });
   };
 

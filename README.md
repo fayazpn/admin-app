@@ -6,7 +6,6 @@
 [Click Here for Live Demo](https://admin-app-gold.vercel.app/)
 
 ![App Page](https://github.com/fayazpn/admin-app/blob/main/public/admin-demo.PNG?raw=true)
-fayazpn/admin-app/blob/main/public/admin-demo.PNG
 ## Table of contents
 * [Live Demo](https://admin-app-gold.vercel.app/)
 * [General info](#general-info)
