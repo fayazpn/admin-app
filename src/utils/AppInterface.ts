@@ -14,6 +14,7 @@ export interface TableDataType {
     age: number;
   };
   nat: string;
+  [key: string]: any; // Add index signature here
   picture: {
     large: string;
     medium: string;

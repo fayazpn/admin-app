@@ -14,7 +14,10 @@ export async function fetchUsers( page = 1, result = 25 ) {
 }
 
 const useFetchData = (page: number, results: number) => {
-  return useQuery(["fetchData", page, results], () => fetchUsers(page, results));
+  return useQuery(["fetchData", page, results], () => fetchUsers(page, results),{
+    cacheTime: 0,
+    staleTime: Infinity,
+  });
 };
 
 export default useFetchData;

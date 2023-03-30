@@ -28,7 +28,7 @@ const App: React.FC = () => {
           },
         }}
       >
-        <Layout className="layout" style={{ minHeight: "100vh" }}>
+        <Layout className="layout" style={{ minHeight: "100vh"}} >
           <Header
             className="flex justify-between items-center px-5"
             style={{
@@ -48,7 +48,7 @@ const App: React.FC = () => {
               unCheckedChildren="Light"
             />
           </Header>
-          <Content style={{ padding: "0 50px" }}>
+          <Content style={{ padding: "0 10px", overflowY: 'auto' }}>
             <div className="flex items-center justify-center w-full">
               <AdminTable />
             </div>

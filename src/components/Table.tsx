@@ -1,10 +1,7 @@
 import React, { useReducer, useRef, useState } from "react";
-import { Input, InputRef, TableProps } from "antd";
+import { Input, InputRef, Pagination, TableProps } from "antd";
 import { Button, Space, Table } from "antd";
-import type {
-  ColumnsType,
-  ColumnType
-} from "antd/es/table/interface";
+import type { ColumnsType, ColumnType } from "antd/es/table/interface";
 import { DataIndex, TableDataType } from "../utils/AppInterface";
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -13,133 +10,17 @@ import Highlighter from "react-highlight-words";
 import useFetchData from "../utils/api";
 import { initialState, tableReducer } from "../utils/AppReducer";
 
-const data: TableDataType[] = [
-  {
-    gender: "female",
-    name: {
-      title: "Ms",
-      first: "Saloni",
-      last: "Dawangave",
-    },
-    email: "saloni.dawangave@example.com",
-    dob: {
-      date: "1984-10-19T14:43:24.592Z",
-      age: 38,
-    },
-    phone: "9269639603",
-    picture: {
-      large: "https://randomuser.me/api/portraits/women/5.jpg",
-      medium: "https://randomuser.me/api/portraits/med/women/5.jpg",
-      thumbnail: "https://randomuser.me/api/portraits/thumb/women/5.jpg",
-    },
-    nat: "IN",
-  },
-  {
-    gender: "male",
-    name: {
-      title: "Mr",
-      first: "Antonio",
-      last: "Benavídez",
-    },
-    email: "antonio.benavidez@example.com",
-    dob: {
-      date: "1950-05-31T15:30:11.412Z",
-      age: 72,
-    },
-    phone: "(625) 464 8736",
-    picture: {
-      large: "https://randomuser.me/api/portraits/men/3.jpg",
-      medium: "https://randomuser.me/api/portraits/med/men/3.jpg",
-      thumbnail: "https://randomuser.me/api/portraits/thumb/men/3.jpg",
-    },
-    nat: "MX",
-  },
-  {
-    gender: "male",
-    name: {
-      title: "Mr",
-      first: "Same",
-      last: "Welch",
-    },
-    email: "same.welch@example.com",
-    dob: {
-      date: "1948-02-14T02:53:30.328Z",
-      age: 75,
-    },
-    phone: "08-3876-7215",
-    picture: {
-      large: "https://randomuser.me/api/portraits/men/99.jpg",
-      medium: "https://randomuser.me/api/portraits/med/men/99.jpg",
-      thumbnail: "https://randomuser.me/api/portraits/thumb/men/99.jpg",
-    },
-    nat: "AU",
-  },
-  {
-    gender: "female",
-    name: {
-      title: "Mrs",
-      first: "Florestana",
-      last: "Carvalho",
-    },
-    email: "florestana.carvalho@example.com",
-    dob: {
-      date: "1991-01-08T20:27:48.184Z",
-      age: 32,
-    },
-    phone: "(74) 1429-9769",
-    picture: {
-      large: "https://randomuser.me/api/portraits/women/28.jpg",
-      medium: "https://randomuser.me/api/portraits/med/women/28.jpg",
-      thumbnail: "https://randomuser.me/api/portraits/thumb/women/28.jpg",
-    },
-    nat: "BR",
-  },
-  {
-    gender: "female",
-    name: {
-      title: "Miss",
-      first: "Barbara",
-      last: "Pekarskiy",
-    },
-    email: "barbara.pekarskiy@example.com",
-    dob: {
-      date: "1980-03-17T07:30:08.450Z",
-      age: 43,
-    },
-    phone: "(067) S98-9137",
-    picture: {
-      large: "https://randomuser.me/api/portraits/women/86.jpg",
-      medium: "https://randomuser.me/api/portraits/med/women/86.jpg",
-      thumbnail: "https://randomuser.me/api/portraits/thumb/women/86.jpg",
-    },
-    nat: "UA",
-  },
-];
-
 const AdminTable: React.FC = () => {
-  const [tableState, dispatch] = useReducer(tableReducer, initialState);
   const searchInput = useRef<InputRef>(null);
+  const [tableState, dispatch] = useReducer(tableReducer, initialState);
+
+  // Query to fetch data
   const { isLoading, error, data } = useFetchData(
     tableState.currentPage,
     tableState.pageSize
   );
 
-  // Example of how to use the state and dispatch
-  const handleSearch = (
-    selectedKeys: React.Key[],
-    confirm: () => void,
-    dataIndex: string
-  ) => {
-    confirm();
-    dispatch({ type: "SET_SEARCH_TEXT", payload: selectedKeys[0] as string });
-    dispatch({ type: "SET_SEARCHED_COLUMN", payload: dataIndex });
-  };
-
-  const handleReset = (clearFilters: () => void) => {
-    clearFilters();
-    dispatch({ type: "SET_SEARCHED_COLUMN", payload: "" });
-  };
-
+  // Filter and search functions of columns
   const getColumnSearchProps = (
     dataIndex: DataIndex,
     placeHolder: string
@@ -160,7 +41,11 @@ const AdminTable: React.FC = () => {
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
           onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
+            handleSearch(
+              selectedKeys as string[],
+              confirm,
+              dataIndex.toString()
+            )
           }
           style={{ marginBottom: 8, display: "block" }}
         />
@@ -168,7 +53,7 @@ const AdminTable: React.FC = () => {
           <Button
             type="primary"
             onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
+              handleSearch(selectedKeys as string[], confirm, dataIndex.toString())
             }
             icon={<SearchOutlined />}
             size="small"
@@ -192,7 +77,10 @@ const AdminTable: React.FC = () => {
                 type: "SET_SEARCH_TEXT",
                 payload: (selectedKeys as string[])[0],
               });
-              dispatch({ type: "SET_SEARCHED_COLUMN", payload: dataIndex });
+              dispatch({
+                type: "SET_SEARCHED_COLUMN",
+                payload: dataIndex.toString(),
+              });
             }}
           >
             Filter
@@ -213,8 +101,10 @@ const AdminTable: React.FC = () => {
       <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      dataIndex.includes(".")
-        ? record[dataIndex.split(".")[0]][dataIndex.split(".")[1]]
+      dataIndex.toString().includes(".")
+        ? record[dataIndex.toString().split(".")[0]][
+            dataIndex.toString().split(".")[1]
+          ]
             .toString()
             .toLowerCase()
             .includes((value as string).toLowerCase())
@@ -240,22 +130,12 @@ const AdminTable: React.FC = () => {
       ),
   });
 
-  // Function to handle page change
-  const handlePageChange = (page: number) => {
-    dispatch({ type: "SET_CURRENT_PAGE", payload: page });
-  };
-
-  // Function to handle page size change
-  const handlePageSizeChange = (current: number, size: number) => {
-    dispatch({ type: "SET_CURRENT_PAGE", payload: 1 }); // Reset to first page
-    dispatch({ type: "SET_PAGE_SIZE", payload: size });
-  };
-
+  // Column data
   const columns: ColumnsType<TableDataType> = [
     {
       title: "First Name",
       dataIndex: ["name", "first"],
-      width: "30%",
+
       sorter: (a, b) => a.name.first.localeCompare(b.name.first),
       ...getColumnSearchProps("name.first" as DataIndex, "First Name"),
       render: (_, record) => <span>{record.name.first}</span>,
@@ -263,9 +143,9 @@ const AdminTable: React.FC = () => {
     {
       title: "Last Name",
       dataIndex: ["name", "last"],
-      width: "30%",
       sorter: (a, b) => a.name.last.localeCompare(b.name.last),
       ...getColumnSearchProps("name.last" as DataIndex, "Last Name"),
+      responsive: ["lg"],
       render: (_, record) => <span>{record.name.last}</span>,
     },
     {
@@ -285,7 +165,7 @@ const AdminTable: React.FC = () => {
       ],
       onFilter: (value, record) => record.gender.startsWith(value.toString()),
       filterSearch: true,
-
+      responsive: ["xl"],
       render: (_, record) => (
         <span>{record.gender === "male" ? "M" : "F"}</span>
       ),
@@ -301,7 +181,7 @@ const AdminTable: React.FC = () => {
     {
       title: "Phone Number",
       dataIndex: "phone",
-      width: "20%",
+      responsive: ["sm"],
       ...getColumnSearchProps("phone", "Phone"),
       sorter: (a, b) => a.phone.localeCompare(b.phone),
       sortDirections: ["descend", "ascend"],
@@ -309,9 +189,10 @@ const AdminTable: React.FC = () => {
     {
       title: "Date of Birth",
       dataIndex: ["dob", "date"],
-      width: "25%",
+
       ...getColumnSearchProps("dob.date" as DataIndex, "Date of Birth"),
       sorter: (a, b) => a.dob.date.localeCompare(b.dob.date),
+      responsive: ["md"],
       render: (_, record) => (
         <span>{moment(record.dob.date).format("YYYY-MM-DD")}</span>
       ),
@@ -321,6 +202,7 @@ const AdminTable: React.FC = () => {
       dataIndex: ["dob", "age"],
       sorter: (a, b) => a.dob.age - b.dob.age,
       sortDirections: ["descend", "ascend"],
+      responsive: ["xl"],
     },
     {
       title: "Nationality",
@@ -329,19 +211,44 @@ const AdminTable: React.FC = () => {
       sortDirections: ["descend", "ascend"],
       filters: [...countryFilterData],
       onFilter: (value, record) => record.nat.startsWith(value.toString()),
+      responsive: ["lg"],
       filterSearch: true,
     },
   ];
 
+  // Example of how to use the state and dispatch
+  const handleSearch = (
+    selectedKeys: React.Key[],
+    confirm: () => void,
+    dataIndex: string
+  ) => {
+    confirm();
+    dispatch({ type: "SET_SEARCH_TEXT", payload: selectedKeys[0] as string });
+    dispatch({ type: "SET_SEARCHED_COLUMN", payload: dataIndex });
+  };
+
+  // Filter reset handler
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    dispatch({ type: "SET_SEARCHED_COLUMN", payload: "" });
+  };
+
+  // Function to handle page change
+  const handlePageChange = (page: number) => {
+    dispatch({ type: "SET_CURRENT_PAGE", payload: page });
+  };
+
+  // Function to handle page size change
+  const handlePageSizeChange = (current: number, size: number) => {
+    dispatch({ type: "SET_CURRENT_PAGE", payload: 1 }); // Reset to first page
+    dispatch({ type: "SET_PAGE_SIZE", payload: size });
+  };
+
   return (
-    <>
-      {/* <Space style={{ marginBottom: 16 }}>
-        <Button onClick={setAgeSort}>Sort age</Button>
-        <Button onClick={clearFilters}>Clear filters</Button>
-        <Button onClick={clearAll}>Clear filters and sorters</Button>
-      </Space> */}
+    <div>
       <Table
         className="w-full mt-5"
+        scroll={{ y: `calc(100vh - 270px)` }}
         columns={columns}
         dataSource={data?.results}
         loading={isLoading}
@@ -355,10 +262,10 @@ const AdminTable: React.FC = () => {
             `${range[0]}-${range[1]} of ${total} items`,
           onChange: handlePageChange,
           onShowSizeChange: handlePageSizeChange,
-          total: 100,
+          total: 30000,
         }}
       />
-    </>
+    </div>
   );
 };
 
