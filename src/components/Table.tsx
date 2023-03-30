@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useState } from "react";
+import React, { useMemo, useReducer, useRef, useState } from "react";
 import { Input, InputRef, Pagination, TableProps } from "antd";
 import { Button, Space, Table } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table/interface";
@@ -130,8 +130,8 @@ const AdminTable: React.FC = () => {
       ),
   });
 
-  // Column data
-  const columns: ColumnsType<TableDataType> = [
+  // Column data, Memoize it so it is not calculated on re-renders
+  const columns =  useMemo<ColumnsType<TableDataType>>(() =>[
     {
       title: "First Name",
       dataIndex: ["name", "first"],
@@ -214,7 +214,7 @@ const AdminTable: React.FC = () => {
       responsive: ["lg"],
       filterSearch: true,
     },
-  ];
+  ], []);
 
   // Example of how to use the state and dispatch
   const handleSearch = (
@@ -269,4 +269,4 @@ const AdminTable: React.FC = () => {
   );
 };
 
-export default AdminTable;
+export default React.memo(AdminTable);
